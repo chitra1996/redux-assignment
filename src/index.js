@@ -2,11 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ReduxDemo from './screens/reduxDemo';
 import DisplayCounter from './screens/displayCounter';
-import { createStore } from "redux";
-import { Provider } from "react-redux";
-import { reducer } from "./redux/reducers/reducer.js"
 
-const store = createStore(reducer);
+import { reducer } from "./redux/reducers/reducer";
+import { watchCountUp } from "./redux/sagas/saga";
+
+import { Provider } from "react-redux";
+import createSagaMiddleware from 'redux-saga';
+import { createStore, applyMiddleware } from "redux";
+
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(
+  reducer,
+  applyMiddleware(sagaMiddleware)
+);
+
+sagaMiddleware.run(watchCountUp);
 
 ReactDOM.render(
   <React.StrictMode>
